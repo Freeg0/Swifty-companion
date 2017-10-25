@@ -50,6 +50,9 @@ class SecondViewController: UIViewController {
                 self.login_profil.text = self.login
                 self.cursus_lvl.transform = self.cursus_lvl.transform.scaledBy(x: 1, y: 10)
                 self.lvl_text.text = self.api?.lvl
+                var floatValue : Float = NSString(string: (self.api?.lvl)!).floatValue
+                print(floatValue.rounded())
+                self.cursus_lvl.progress = floatValue - floatValue.rounded(.down)
 //                print(self.api?.cursus_lvl)
 //                self.lvl_text.text = self.api?.cursus_lvl
             }

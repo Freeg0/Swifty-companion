@@ -13,7 +13,7 @@ class APIController {
     
     var dictio:NSDictionary?
     var profil_pic:String?
-    var cursus_users:NSDictionary?
+    var cursus_users:NSArray?
     var lvl:String?
     
     init () {
@@ -51,11 +51,14 @@ class APIController {
     func recupInfo() {
         while (self.dictio == [:]) {}
         self.profil_pic = self.dictio?["image_url"] as? String
-        self.cursus_users = self.dictio?["cursus_users"] as? NSDictionary
-        self.lvl = self.cursus_users?["level"] as? String
+        self.cursus_users = self.dictio?["cursus_users"] as! NSArray
+//        self.lvl = self.cursus_users?[1] as? String
         print("start")
+//        for item in self.cursus_users! {
+//            print("Found \(item)")
+//        }
+        var cursus = self.cursus_users![0] as! NSDictionary
+        self.lvl = String(describing: cursus["level"]!)
         print(self.lvl)
-        print(self.dictio?["cursus_users"] as! NSArray)
-        print(self.cursus_users)
     }
 }
