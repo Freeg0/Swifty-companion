@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SecondViewController: UIViewController {
+class SecondViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     var token:String?
     var login:String?
@@ -17,6 +17,8 @@ class SecondViewController: UIViewController {
     
     var profile_pic:String?
     
+    @IBOutlet weak var img_intra: UIImageView!
+
     @IBOutlet weak var picture_profil: UIImageView!
     
     @IBOutlet weak var login_profil: UILabel!
@@ -24,7 +26,13 @@ class SecondViewController: UIViewController {
     @IBOutlet weak var cursus_lvl: UIProgressView!
 
     @IBOutlet weak var lvl_text: UILabel!
-
+    
+    @IBOutlet weak var Correction_point: UILabel!
+    
+    @IBOutlet weak var wallet: UILabel!
+    
+    @IBOutlet weak var tableViewSkills: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         api = APIController()
@@ -51,8 +59,9 @@ class SecondViewController: UIViewController {
                 self.cursus_lvl.transform = self.cursus_lvl.transform.scaledBy(x: 1, y: 10)
                 self.lvl_text.text = self.api?.lvl
                 var floatValue : Float = NSString(string: (self.api?.lvl)!).floatValue
-                print(floatValue.rounded())
                 self.cursus_lvl.progress = floatValue - floatValue.rounded(.down)
+                self.Correction_point.text = self.api?.correction_point
+                self.wallet.text = self.api?.wallet
 //                print(self.api?.cursus_lvl)
 //                self.lvl_text.text = self.api?.cursus_lvl
             }
@@ -65,7 +74,17 @@ class SecondViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return (self.api?.skills?.count)!
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableViewSkills.dequeueReusableCell(withIdentifier: "skillsCell") as? TableViewCellSkills
+        print(self.api?.skills?[indexPath.row])
+        cell?.skill = self.api?.skills?[indexPath.row] as? NSDictionary
+        return cell!
+}
+    
     /*
     // MARK: - Navigation
 
