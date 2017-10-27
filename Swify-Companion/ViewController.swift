@@ -10,14 +10,35 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    var api: APIController = APIController()
     var token:String?
     var login:String?
     let UID = "59deaf346e630b48a2c7c73829cf83378d2c69e5a5a1ab987dcf2849a525055b"
     let SECRET = "4e1b4058e8d677c013b2e7127ef06ab2cccb66457e944c61769c2816a31f21a5"
     
     @IBOutlet weak var loginTextField: UITextField!
+    @IBOutlet weak var btn: UIButton!
     
+    @IBOutlet weak var errorLabel: UILabel!
     @IBAction func searchDataLoginAction(_ sender: UIButton) {
+        print("in btn")
+        self.login = loginTextField.text
+        print(self.login!)
+        self.api.getUserInfo(token: self.token!, login: self.login!) { user in
+            if user != nil {
+                DispatchQueue.main.async {
+                    self.errorLabel.text = ""
+                    print("pac")
+                    self.api.recupInfo()
+                    self.performSegue(withIdentifier: "segueLoginInfo", sender: nil)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.errorLabel.text = "ERROR"
+                }
+                
+            }
+        }
     }
     
     func getToken() {
@@ -40,10 +61,12 @@ class ViewController: UIViewController {
                             self.token = t
                         }
                         print("token = " + self.token!)
+//                        completion(true)
                     }
                 }
                 catch (let err) {
                     print(err)
+//                    completion(false)
                 }
             }
         }
@@ -55,6 +78,7 @@ class ViewController: UIViewController {
             if let tv = segue.destination as? SecondViewController {
                 tv.token = self.token
                 tv.login = loginTextField.text
+                tv.api = self.api
             }
         }
     }

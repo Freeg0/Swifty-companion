@@ -18,12 +18,13 @@ class APIController {
     var lvl:String?
     var correction_point:String?
     var wallet:String?
+    var projects_user:NSArray?
     
     init () {
         print("dans le init")
     }
     
-    func getUserInfo(token: String, login: String) -> NSDictionary {
+    func getUserInfo(token: String, login: String, completion: @escaping (_ user: NSDictionary?) -> Void) {
         let url = NSURL(string: "https://api.intra.42.fr/v2/users/\(login)/?access_token=\(token)")
         let request = NSMutableURLRequest(url: url! as URL)
         request.httpMethod = "GET"
@@ -34,25 +35,30 @@ class APIController {
             print(response!)
             if error != nil {
                 print(error!)
+                completion(nil)
             }
             else if let d = data {
                 do {
                     if let dic : NSDictionary = try JSONSerialization.jsonObject(with: d, options: JSONSerialization.ReadingOptions.mutableContainers) as? NSDictionary {
                         self.dictio = dic
                         print(dic)
+                        if dic.count > 0 {
+                            completion(dic)
+                        } else {
+                            completion(nil)
+                        }
                     }
                 }
                 catch (let err) {
                     print(err)
+                    completion(nil)
                 }
             }
         }
         task.resume()
-        return dictio!
     }
     
     func recupInfo() {
-        while (self.dictio == [:]) {}
         self.profil_pic = self.dictio?["image_url"] as? String
         self.cursus_users = self.dictio?["cursus_users"] as! NSArray
         print("start")
@@ -63,7 +69,8 @@ class APIController {
         self.wallet = String(describing: self.dictio?["wallet"] as! Int)
         self.lvl = String(describing: cursus["level"]!)
         self.skills = cursus["skills"] as! NSArray
+        self.projects_user = self.dictio?["projects_users"] as! NSArray
         print("prout")
-        print(self.skills!)
+        print(self.projects_user!)
     }
 }
