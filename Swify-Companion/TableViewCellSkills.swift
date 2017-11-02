@@ -17,7 +17,7 @@ class TableViewCellSkills: UITableViewCell {
         didSet {
             if let s = skill {
                 nameSkills.text = s["name"]! as! String
-                lvlSkills.text = String(describing: s["level"]! as! NSNumber)
+                lvlSkills.text = String(format:"%.2f", s["level"]! as! Double)
             }
         }
     }

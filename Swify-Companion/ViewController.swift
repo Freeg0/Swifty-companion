@@ -21,22 +21,23 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var errorLabel: UILabel!
     @IBAction func searchDataLoginAction(_ sender: UIButton) {
-        print("in btn")
-        self.login = loginTextField.text
-        print(self.login!)
-        self.api.getUserInfo(token: self.token!, login: self.login!) { user in
-            if user != nil {
-                DispatchQueue.main.async {
-                    self.errorLabel.text = ""
-                    print("pac")
-                    self.api.recupInfo()
-                    self.performSegue(withIdentifier: "segueLoginInfo", sender: nil)
+        if self.token != nil {
+            print("in btn")
+            self.login = loginTextField.text
+            print(self.login!)
+            self.api.getUserInfo(token: self.token!, login: self.login!) { user in
+                if user != nil {
+                    DispatchQueue.main.async {
+                        self.errorLabel.text = ""
+                        print("pac")
+                        self.api.recupInfo()
+                        self.performSegue(withIdentifier: "segueLoginInfo", sender: nil)
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.errorLabel.text = "ERROR"
+                    }
                 }
-            } else {
-                DispatchQueue.main.async {
-                    self.errorLabel.text = "ERROR"
-                }
-                
             }
         }
     }

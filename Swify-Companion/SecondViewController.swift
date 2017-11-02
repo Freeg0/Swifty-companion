@@ -31,6 +31,8 @@ class SecondViewController: UIViewController, UITableViewDataSource, UITableView
     
     @IBOutlet weak var tableViewSkills: UITableView!
     
+    @IBOutlet weak var tableViewProjects: UITableView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         print(api)
@@ -67,18 +69,35 @@ class SecondViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let skillsArray = self.api?.skills {
-            return skillsArray.count
+        if tableView == tableViewSkills {
+            if let skillsArray = self.api?.skills {
+                return skillsArray.count
+            } else {
+                return 0
+            }
+        } else if tableView == tableViewProjects {
+            if let projectsArray = self.api?.projects {
+                return projectsArray.count
+            } else {
+                return 0
+            }
         } else {
             return 0
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableViewSkills.dequeueReusableCell(withIdentifier: "skillsCell") as? TableViewCellSkills
-        print(self.api?.skills?[indexPath.row])
-        cell?.skill = self.api?.skills?[indexPath.row] as? NSDictionary
-        return cell!
+        let lol:UITableViewCell? = nil
+        if tableView == tableViewSkills {
+            let cell = tableViewSkills.dequeueReusableCell(withIdentifier: "skillsCell") as? TableViewCellSkills
+            cell?.skill = self.api?.skills?[indexPath.row] as? NSDictionary
+            return cell!
+        } else if tableView == tableViewProjects {
+            let cell = tableViewProjects.dequeueReusableCell(withIdentifier: "projectsCell") as? TableViewCellProjects
+            cell?.project = self.api?.projects?[indexPath.row] as? NSDictionary
+            return cell!
+        }
+        return lol!
     }
     
     /*
